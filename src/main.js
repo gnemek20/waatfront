@@ -3,6 +3,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import axios from 'axios'
+Vue.prototype.$api = axios
+
+import DefaultUI from '@/css/default.scss'
+Vue.use(DefaultUI)
+
 Vue.config.productionTip = false
 
 new Vue({
