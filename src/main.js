@@ -9,6 +9,9 @@ Vue.prototype.$api = axios
 import DefaultUI from '@/css/default.scss'
 Vue.use(DefaultUI)
 
+import { WaatInput } from './components/index'
+Vue.component('WaatInput', WaatInput)
+
 Vue.config.productionTip = false
 
 new Vue({
