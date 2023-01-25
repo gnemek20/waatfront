@@ -8,9 +8,9 @@
         <p>이곳에 설명을 입력하세요</p>
         <p>당신의 멋진 설명이 이곳에 입력됩니다!</p>
       </div>
-      <div class="flex space-between">
-        <WaatButton>Sign in</WaatButton>
-        <WaatButton>Sign up</WaatButton>
+      <div class="flex space-between" style="margin-top: 35px;">
+        <WaatButton @click="push('signin')">Sign in</WaatButton>
+        <WaatButton @click="push('signup')">Sign up</WaatButton>
       </div>
     </div>
   </div>
@@ -18,6 +18,11 @@
 
 <script>
 export default {
+  methods: {
+    push(address) {
+      this.$router.push(address).catch(() => {});
+    }
+  }
 }
 </script>
 
