@@ -1,8 +1,8 @@
 <template>
   <div class="box">
     <div class="box">
-      <WaatInput name="id" v-model="user.id" placeHolder="아이디"></WaatInput>
-      <WaatInput name="pwd" v-model="user.pwd" placeHolder="비밀번호"></WaatInput>
+      <WaatInput name="id" v-model="user.id" placeholder="아이디" nospace focus></WaatInput>
+      <WaatInput name="pwd" v-model="user.pwd" placeholder="비밀번호" type="password" nospace></WaatInput>
     </div>
     <div class="flex justify-center">
       <WaatButton @click="replace('/')">뒤로가기</WaatButton>
@@ -30,12 +30,12 @@ export default {
         user: this.user
       }).then((res) => {
         if (res.data.status) {
-          this.$session.set('id', res.data.id);
+          this.$session.set('id', res.data.id)
           this.replace('/')
         }
         else {
-          alert(res.data.msg);
-          this.$router.go();
+          alert(res.data.msg)
+          this.$router.go()
         }
       })
     }
