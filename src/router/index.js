@@ -32,4 +32,31 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const axios = require('axios')
+  const VueSession = require('vue-session')
+  const Vuex = require('@/store/index')
+
+  const store = Vuex.default.state.user
+
+  if (!store.id) {
+    const session = JSON.parse(window.localStorage.getItem(VueSession.key)) || {};
+
+    if (session['id']) {
+      axios.post('/api/users/user', {
+        user: { id: session['id'] }
+      }).then((res) => {
+        Vuex.default.state.user = res.data.user
+        Vue.prototype.$auth = true
+      })
+    }
+    else {
+      Vuex.default.state.user = {}
+      Vue.prototype.$auth = false
+    }
+  }
+
+  next()
+})
+
 export default router
