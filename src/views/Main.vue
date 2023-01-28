@@ -9,8 +9,8 @@
         <p>당신의 멋진 설명이 이곳에 입력됩니다!</p>
       </div>
       <div class="flex space-between" style="margin-top: 35px;">
-        <WaatButton @click="push('signin')">Sign in</WaatButton>
-        <WaatButton @click="push('signup')">Sign up</WaatButton>
+        <WaatButton @click="push('signin')">로그인</WaatButton>
+        <WaatButton @click="push('signup')">회원가입</WaatButton>
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@
 export default {
   methods: {
     push(address) {
-      this.$router.push(address).catch(() => {});
+      this.$router.push(address).catch(() => {})
     }
   }
 }

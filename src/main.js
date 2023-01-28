@@ -6,6 +6,10 @@ import store from './store'
 import axios from 'axios'
 Vue.prototype.$api = axios
 
+import VueSession from 'vue-session'
+let sessionOptions = { persist: true }
+Vue.use(VueSession, sessionOptions)
+
 import DefaultUI from '@/css/default.scss'
 Vue.use(DefaultUI)
 
