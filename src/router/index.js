@@ -9,7 +9,7 @@ const checkAuth = (sign) => (to, from, next) => {
   const auth = session['id'] == undefined ? false : true
 
   if (sign == auth) next()
-  else next(sign ? '/redirectmain' : '/redirectworkspace')
+  else next(sign ? '/' : '/workspace')
 }
 
 const routes = [
@@ -42,14 +42,6 @@ const routes = [
     name: 'inferencepage',
     component: () => import('@/views/inference/InferencePage.vue'),
     beforeEnter: checkAuth(true)
-  },
-  {
-    path: '/redirectmain',
-    redirect: '/'
-  },
-  {
-    path: '/redirectworkspace',
-    redirect: '/workspace'
   },
   {
     path: '*',
