@@ -21,6 +21,10 @@ export default {
   methods: {
     push(address) {
       this.$router.push(address).catch(() => {})
+    },
+    signout() {
+      this.$session.destroy()
+      this.$router.go()
     }
   }
 }

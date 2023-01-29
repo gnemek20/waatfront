@@ -13,7 +13,9 @@ Vue.use(VueSession, sessionOptions)
 import DefaultUI from '@/css/default.scss'
 Vue.use(DefaultUI)
 
-import { WaatButton, WaatInput } from './components/index'
+import { Section, WaatButton, WaatHeader, WaatInput } from './components/index'
+Vue.component('Section', Section)
+Vue.component('WaatHeader', WaatHeader)
 Vue.component('WaatInput', WaatInput)
 Vue.component('WaatButton', WaatButton)
 

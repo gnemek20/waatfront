@@ -3,26 +3,57 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+const checkAuth = (sign) => (to, from, next) => {
+  const VueSession = require('vue-session')
+  const session = JSON.parse(window.localStorage.getItem(VueSession.key)) || {};
+  const auth = session['id'] == undefined ? false : true
+
+  if (sign == auth) next()
+  else next(sign ? '/redirectmain' : '/redirectworkspace')
+}
+
 const routes = [
   {
     path: '/',
     name: 'main',
-    component: () => import('@/views/Main.vue')
+    component: () => import('@/views/Main.vue'),
+    beforeEnter: checkAuth(false)
   },
   {
     path: '/signin',
     name: 'signin',
-    component: () => import('@/views/sign/SignIn.vue')
+    component: () => import('@/views/sign/SignIn.vue'),
+    beforeEnter: checkAuth(false)
   },
   {
     path: '/signup',
     name: 'signup',
-    component: () => import('@/views/sign/SignUp.vue')
+    component: () => import('@/views/sign/SignUp.vue'),
+    beforeEnter: checkAuth(false)
+  },
+  {
+    path: '/workspace',
+    name: 'workspace',
+    component: () => import('@/views/WorkSpace.vue'),
+    beforeEnter: checkAuth(true)
   },
   {
     path: '/inferencepage',
     name: 'inferencepage',
-    component: () => import('@/views/inference/InferencePage.vue')
+    component: () => import('@/views/inference/InferencePage.vue'),
+    beforeEnter: checkAuth(true)
+  },
+  {
+    path: '/redirectmain',
+    redirect: '/'
+  },
+  {
+    path: '/redirectworkspace',
+    redirect: '/workspace'
+  },
+  {
+    path: '*',
+    redirect: '/'
   }
 ]
 
@@ -30,33 +61,6 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
-
-router.beforeEach((to, from, next) => {
-  const axios = require('axios')
-  const VueSession = require('vue-session')
-  const Vuex = require('@/store/index')
-
-  const store = Vuex.default.state.user
-
-  if (!store.id) {
-    const session = JSON.parse(window.localStorage.getItem(VueSession.key)) || {};
-
-    if (session['id']) {
-      axios.post('/api/users/user', {
-        user: { id: session['id'] }
-      }).then((res) => {
-        Vuex.default.state.user = res.data.user
-        Vue.prototype.$auth = true
-      })
-    }
-    else {
-      Vuex.default.state.user = {}
-      Vue.prototype.$auth = false
-    }
-  }
-
-  next()
 })
 
 export default router
