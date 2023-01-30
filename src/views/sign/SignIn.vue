@@ -31,6 +31,7 @@ export default {
       }).then((res) => {
         if (res.data.status) {
           this.$session.set('id', res.data.id)
+          this.$session.set('name', res.data.name)
           this.$router.replace('/workspace')
         }
         else {

@@ -1,10 +1,7 @@
 <template>
   <div class="box">
-    <div class="flex space-between full-width">
-      <WaatInput name="image_dir" v-model="data.image_dir" placeholder="image_dir"></WaatInput>
-      <WaatInput name="model_path" v-model="data.model_path" placeholder="model_path"></WaatInput>
-      <WaatInput name="annotation_dir" v-model="data.annotation_dir" placeholder="annotation_dir"></WaatInput>
-      <WaatInput name="pretrained_model" v-model="data.pretrained_model" placeholder="pretrained_model"></WaatInput>
+    <div class="flex justify-center full-width">
+      <input ref="image" type="file" accept="image/png" multiple />
     </div>
     <div class="full-width">
       <WaatButton @click="inference">inference</WaatButton>
@@ -14,28 +11,34 @@
 
 <script>
 export default {
-  data() {
-    return {
-      data: {
-        image_dir: '',
-        model_path: '',
-        annotation_dir: '',
-        pretrained_model: ''
-      }
-    }
-  },
   methods: {
     inference() {
-      // this.$api.post('/api/python/inferenceweb', {
-      //   data: this.data
-      // }).then((res) => {
-      //   console.log(123)
-      // })
+      const fileDownload = require('js-file-download')
+      const files = this.$refs.image.files
 
-      this.$api.get('/api/python')
-      .then((res) => {
-        console.log(res)
-      })
+      if (files.length < 6 && files.length > 0) {
+        this.$api.post('/api/pythons/mkdir', {
+          name: this.$session.get('name')
+        }).then((res) => {})
+
+        const formData = new FormData()
+        formData.append("name", this.$session.get('name'))
+        for (var i = 0; i < files.length; i++) {
+          formData.append("image", files[i])
+        }
+
+        this.$api.post('/api/pythons/saveimages', formData)
+
+        this.$api.post('/api/pythons/inference', formData, {
+          responseType: 'blob'
+        }).then((res) => {
+          fileDownload(res.data, 'waat.zip')
+        })
+      }
+      else {
+        alert('파일은 1 ~ 5개까지만 업로드해주세요!')
+        this.$router.go()
+      }
     }
   }
 }
