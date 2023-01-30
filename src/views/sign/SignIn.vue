@@ -1,12 +1,20 @@
 <template>
-  <div class="box">
-    <div class="box">
-      <WaatInput name="id" v-model="user.id" placeholder="아이디" nospace focus></WaatInput>
-      <WaatInput name="pwd" v-model="user.pwd" placeholder="비밀번호" type="password" nospace></WaatInput>
-    </div>
-    <div class="flex justify-center">
-      <WaatButton @click="replace('/')">뒤로가기</WaatButton>
-      <WaatButton @click="signin">로그인</WaatButton>
+  <div class="box align-center">
+    <WaatHeader onlyHeader></WaatHeader>
+    <div class="box default-width">
+      <div class="box">
+        <div class="box" @keydown.enter="signin()" style="margin: 20px 0px 10px;">
+          <p>아이디</p>
+          <WaatInput name="id" v-model="user.id" nospace focus></WaatInput>
+        </div>
+        <div class="box" @keydown.enter="signin()" style="margin: 10px 0px 20px;">
+          <p>비밀번호</p>
+          <WaatInput name="pwd" v-model="user.pwd" type="password" nospace></WaatInput>
+        </div>
+      </div>
+      <div class="flex full-width" style="margin-top: 20px;">
+        <WaatButton class="full-width" @click="signin">로그인</WaatButton>
+      </div>
     </div>
   </div>
 </template>

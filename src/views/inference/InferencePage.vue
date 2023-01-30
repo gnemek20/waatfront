@@ -18,11 +18,11 @@ export default {
 
       if (files.length < 6 && files.length > 0) {
         this.$api.post('/api/pythons/mkdir', {
-          name: this.$session.get('name')
+          id: this.$session.get('id')
         }).then((res) => {})
 
         const formData = new FormData()
-        formData.append("name", this.$session.get('name'))
+        formData.append("id", this.$session.get('id'))
         for (var i = 0; i < files.length; i++) {
           formData.append("image", files[i])
         }

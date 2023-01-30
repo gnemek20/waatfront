@@ -2,11 +2,13 @@
   <div class="box">
     <div class="flex banner full-width">
       <Section>
-        <div class="flex align-center title pointer" @click="reload()">
-          <p>WAAT</p>
-        </div>
-        <div class="flex align-center left-auto">
-          <WaatButton @click="signout()">로그아웃</WaatButton>
+        <div class="flex full-width justify-center">
+          <div class="flex title pointer" @click="push()">
+            <p>WAAT</p>
+          </div>
+          <div v-if="!onlyHeader" class="flex align-center left-auto">
+            <WaatButton @click="signout()">로그아웃</WaatButton>
+          </div>
         </div>
       </Section>
     </div>
@@ -15,9 +17,19 @@
 
 <script>
 export default {
+  props: {
+    onlyHeader: {
+      type: Boolean,
+      default: false
+    }
+  },
   methods: {
-    reload() {
-      this.$router.go()
+    push() {
+      if (this.$session.get('id')) {
+        if (this.$router.currentRoute.path == '/workspace') this.$router.go()
+        else this.$router.push('/workspace')
+      }
+      else this.$router.push('/')
     },
     signout() {
       this.$session.destroy()

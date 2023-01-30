@@ -60,13 +60,9 @@ input {
   border-color: dimgray;
 }
 
-input:focus {
-  outline: none;
-}
-
 p {
   position: fixed;
-  margin-top: 32px;
+  margin-top: 17px;
 
   font-size: 12px;
 }
