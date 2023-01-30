@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="flex full-width" style="margin-top: 20px;">
-        <WaatButton class="full-width" @click="signin">로그인</WaatButton>
+        <WaatButton class="full-width" @click="signin" :disabled="!submit">로그인</WaatButton>
       </div>
     </div>
   </div>
@@ -26,7 +26,8 @@ export default {
       user: {
         id: '',
         pwd: ''
-      }
+      },
+      submit: false
     }
   },
   methods: {
@@ -48,6 +49,10 @@ export default {
         }
       })
     }
+  },
+  updated() {
+    if (this.user.id.length > 0 && this.user.pwd.length > 0) this.submit = true
+    else this.submit = false
   }
 }
 </script>
