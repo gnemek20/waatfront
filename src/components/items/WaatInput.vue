@@ -41,10 +41,10 @@ export default {
     },
     blurEventEmit() {
       this.$emit('blur');
-    },
-    mounted() {
-      if (this.focus) this.$refs[this.name].focus();
     }
+  },
+  mounted() {
+    if (this.focus) this.$refs[this.name].focus();
   }
 }
 </script>

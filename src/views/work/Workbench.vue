@@ -2,7 +2,7 @@
   <div class="box">
     <WaatHeader />
     <WaatModal v-if="deleteModal">
-      <div slot="header" class="flex justify-center" style="margin-bottom: 5px;">
+      <div slot="header" class="flex justify-center" @keydown.esc="deleteModal = !deleteModal" style="margin-bottom: 5px;">
         <p style="font-size: 25px;">정말로 삭제하시겠습니까?</p>
       </div>
       <div slot="footer" class="flex justify-center">
@@ -15,10 +15,10 @@
       </div>
     </WaatModal>
     <WaatModal v-if="createModal">
-      <div slot="header" class="flex justify-center" @keydown.enter="createWorkspace" style="margin-bottom: 5px;">
-        <WaatInput name="title" v-model="newWorkspace.title" placeholder="새로운 프로젝트"></WaatInput>
+      <div slot="header" class="flex justify-center" @keydown.enter="createWorkspace" @keydown.esc="createModalStatus(false)" style="margin-bottom: 5px;">
+        <WaatInput name="title" v-model="newWorkspace.title" placeholder="새로운 프로젝트" focus></WaatInput>
       </div>
-      <div class="flex" slot="body" @keydown.enter="createWorkspace" style="margin-bottom: 5px;">
+      <div class="flex" slot="body" @keydown.enter="createWorkspace" @keydown.esc="createModalStatus(false)" style="margin-bottom: 5px;">
         <textarea ref="manual" v-model="newWorkspace.manual" rows="20" placeholder="설명"></textarea>
       </div>
       <div slot="footer" class="flex justify-center">
@@ -62,7 +62,7 @@
                   <Divider />
                   <div class="flex" style="padding-left: 5px;">
                     <div class="flex">
-                      <p class="date">2023 / 02 / 02</p>
+                      <p class="date">{{ workspaces[index - 1].date }}</p>
                     </div>
                     <div class="trash flex left-auto" @click="deleteModalStatus(true, index - 1)" style="padding: 0px 5px;">
                       <img src="@/assets/icon/trash_icon.svg" width="12px">
@@ -105,9 +105,12 @@ export default {
       this.workspacesCount = (rowCount - 1) + parseInt(this.workspaces.length / rowCount) * rowCount
     },
     createWorkspace() {
+      this.newWorkspace.date = Intl.DateTimeFormat('kr').format(new Date()).replace(/\./g, '').replace(/\s/g, ' / ');
+
       this.workspaces.push({
         'title': this.newWorkspace.title,
-        'manual': this.newWorkspace.manual
+        'manual': this.newWorkspace.manual,
+        'date': this.newWorkspace.date
       })
 
       this.workspacesCount += 1
@@ -127,7 +130,7 @@ export default {
       this.newWorkspace.manual = ''
     },
     chick() {
-      console.log(this.workspaces)
+      
     }
   },
   created() {
