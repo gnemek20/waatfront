@@ -26,8 +26,8 @@ export default {
   methods: {
     push() {
       if (this.$session.get('id')) {
-        if (this.$router.currentRoute.path == '/workspace') this.$router.go()
-        else this.$router.push('/workspace')
+        if (this.$router.currentRoute.path == '/workbench') this.$router.go()
+        else this.$router.push('/workbench')
       }
       else this.$router.push('/')
     },

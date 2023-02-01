@@ -41,7 +41,7 @@ export default {
         if (res.data.status) {
           this.$session.set('id', res.data.id)
           this.$session.set('name', res.data.name)
-          this.$router.replace('/workspace')
+          this.$router.replace('/workbench')
         }
         else {
           alert(res.data.msg)

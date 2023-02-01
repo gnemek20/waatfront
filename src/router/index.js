@@ -9,7 +9,7 @@ const checkAuth = (sign) => (to, from, next) => {
   const auth = session['id'] == undefined ? false : true
 
   if (sign == auth) next()
-  else next(sign ? '/' : '/workspace')
+  else next(sign ? '/' : '/workbench')
 }
 
 const routes = [
@@ -32,9 +32,15 @@ const routes = [
     beforeEnter: checkAuth(false)
   },
   {
+    path: '/workbench',
+    name: 'workbench',
+    component: () => import('@/views/work/Workbench.vue'),
+    beforeEnter: checkAuth(true)
+  },
+  {
     path: '/workspace',
     name: 'workspace',
-    component: () => import('@/views/WorkSpace.vue'),
+    component: () => import('@/views/work/Workspace.vue'),
     beforeEnter: checkAuth(true)
   },
   {
