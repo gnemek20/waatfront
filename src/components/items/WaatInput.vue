@@ -20,6 +20,10 @@ export default {
       type: String,
       default: ''
     },
+    maxlength: {
+      type: String,
+      default: '0'
+    },
     align: {
       type: String,
       default: 'left'
@@ -36,7 +40,8 @@ export default {
   methods: {
     inputEventEmit() {
       if (this.nospace) this.$refs[this.name].value = this.$refs[this.name].value.replace(/\s/g, '');
-
+      if (Number(this.maxlength)) this.$refs[this.name].value = this.$refs[this.name].value.slice(0, Number(this.maxlength));
+      
       this.$emit('input', this.$refs[this.name].value);
     },
     blurEventEmit() {

@@ -7,7 +7,7 @@
           <p>아이디</p>
           <div class="flex">
             <div class="flex full-width" style="margin-right: 5px;">
-              <WaatInput name="id" v-model="user.id" placeholder="최대 20글자까지 입력 가능합니다" @input="inputId" nospace focus>
+              <WaatInput name="id" v-model="user.id" maxlength="20" placeholder="최대 20글자까지 입력 가능합니다" @input="inputId" nospace focus>
                 <p ref="idStatus">{{ message.id }}</p>
               </WaatInput>
             </div>
@@ -18,17 +18,17 @@
         </div>
         <div class="box" @keydown.enter="signup()" style="margin: 10px 0px;">
           <p>비밀번호</p>
-          <WaatInput name="pwd" v-model="user.pwd" type="password" placeholder="최대 20글자까지 입력 가능합니다" @input="validatePwd" nospace></WaatInput>
+          <WaatInput name="pwd" v-model="user.pwd" type="password" maxlength="20" placeholder="최대 20글자까지 입력 가능합니다" @input="validatePwd" nospace></WaatInput>
         </div>
         <div class="box" @keydown.enter="signup()" style="margin: 10px 0px;">
           <p>비밀번호 확인</p>
-          <WaatInput name="confirmPwd" v-model="confirmPwd" type="password" placeholder="최대 20글자까지 입력 가능합니다" @input="validatePwd" nospace>
+          <WaatInput name="confirmPwd" v-model="confirmPwd" type="password" maxlength="20" placeholder="최대 20글자까지 입력 가능합니다" @input="validatePwd" nospace>
             <p ref="pwdStatus">{{ message.pwd }}</p>
           </WaatInput>
         </div>
         <div class="box" @keydown.enter="signup()" style="margin: 10px 0px 20px;">
           <p>닉네임</p>
-          <WaatInput name="pwd" v-model="user.name" placeholder="최대 20글자까지 입력 가능합니다"></WaatInput>
+          <WaatInput name="name" v-model="user.name" maxlength="20" placeholder="최대 20글자까지 입력 가능합니다"></WaatInput>
         </div>
       </div>
       <div class="flex full-width" style="margin: 20px 0px;">
