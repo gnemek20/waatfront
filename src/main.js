@@ -13,13 +13,14 @@ Vue.use(VueSession, sessionOptions)
 import DefaultUI from '@/css/default.scss'
 Vue.use(DefaultUI)
 
-import { Divider, Section, WaatBox, WaatButton, WaatHeader, WaatInput } from './components/index'
+import { Divider, Section, WaatBox, WaatButton, WaatHeader, WaatInput, WaatModal } from './components/index'
 Vue.component('Section', Section)
 Vue.component('Divider', Divider)
 Vue.component('WaatHeader', WaatHeader)
 Vue.component('WaatInput', WaatInput)
 Vue.component('WaatButton', WaatButton)
 Vue.component('WaatBox', WaatBox)
+Vue.component('WaatModal', WaatModal)
 
 Vue.config.productionTip = false
 
