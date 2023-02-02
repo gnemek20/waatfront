@@ -16,17 +16,17 @@
     </WaatModal>
     <WaatModal v-if="createModal">
       <div slot="header" class="flex justify-center" @keydown.enter="createWorkspace" @keydown.esc="createModalStatus(false)" style="margin-bottom: 5px;">
-        <WaatInput name="title" v-model="newWorkspace.title" placeholder="새로운 프로젝트" focus></WaatInput>
+        <WaatInput name="theme" v-model="newWorkspace.theme" placeholder="새로운 프로젝트" focus></WaatInput>
       </div>
       <div class="flex" slot="body" @keydown.enter="createWorkspace" @keydown.esc="createModalStatus(false)" style="margin-bottom: 5px;">
-        <textarea ref="manual" v-model="newWorkspace.manual" rows="20" placeholder="설명"></textarea>
+        <textarea ref="content" v-model="newWorkspace.content" rows="20" placeholder="설명"></textarea>
       </div>
       <div slot="footer" class="flex justify-center">
         <div style="margin-right: 20px;">
           <WaatButton @click="createModalStatus(false)">취소하기</WaatButton>
         </div>
         <div style="margin-left: 20px;">
-          <WaatButton @click="createWorkspace" :disabled="newWorkspace.title.length < 1">생성하기</WaatButton>
+          <WaatButton @click="createWorkspace" :disabled="newWorkspace.theme.length < 1">생성하기</WaatButton>
         </div>
       </div>
     </WaatModal>
@@ -49,14 +49,14 @@
             </div>
             <div v-for="index in workspacesCount" v-bind:key="index" style="width: 152px; height: 152px; margin: 10px;">
               <WaatBox class="workspaces" v-if="workspaces[index - 1]">
-                <div class="flex flex-column full-width full-height" @click="chick">
+                <div class="flex flex-column full-width full-height">
                   <div class="flex flex-column align-center full-height" style="margin-bottom: auto; padding: 5px;">
                     <div class="flex">
-                      <p>{{ workspaces[index - 1].title.length > 10 ? workspaces[index - 1].title.slice(0, 8) + ' . . .' : workspaces[index - 1].title }}</p>
+                      <p>{{ workspaces[index - 1].theme.length > 10 ? workspaces[index - 1].theme.slice(0, 8) + ' . . .' : workspaces[index - 1].theme }}</p>
                     </div>
                     <Divider style="width: 80%" />
                     <div class="flex align-center full-height">
-                      <p>{{ workspaces[index - 1].manual.length > 40 ? workspaces[index - 1].manual.slice(0, 38) + ' . . .' : workspaces[index - 1].manual }}</p>
+                      <p>{{ workspaces[index - 1].content.length > 40 ? workspaces[index - 1].content.slice(0, 38) + ' . . .' : workspaces[index - 1].content }}</p>
                     </div>
                   </div>
                   <Divider />
@@ -83,8 +83,9 @@ export default {
   data() {
     return {
       newWorkspace: {
-        title: '',
-        manual: '',
+        id: this.$session.get('id'),
+        theme: '',
+        content: '',
         date: ''
       },
       workspaces: [],
@@ -107,18 +108,51 @@ export default {
     createWorkspace() {
       this.newWorkspace.date = Intl.DateTimeFormat('kr').format(new Date()).replace(/\./g, '').replace(/\s/g, ' / ');
 
-      this.workspaces.push({
-        'title': this.newWorkspace.title,
-        'manual': this.newWorkspace.manual,
-        'date': this.newWorkspace.date
-      })
-
-      this.workspacesCount += 1
-      this.createModalStatus(false)
+      this.$api.post('/api/users/validateWorkspaceTheme', {
+        workspace: this.newWorkspace,
+      }).then((res) => {
+        if (res.data.isExist) {
+          this.$refs['content'].value = this.$refs['content'].value.replace(/\n/g, '');
+          alert('이름이 중복됩니다.');
+        }
+        else {
+          this.$api.post('/api/users/createWorkspace', {
+            workspace: this.newWorkspace,
+          }).then((res) => {
+            if (!res.data.status) {
+              alert(res.data.msg);
+              this.$router.go();
+            }
+            else {
+              this.workspaces.push({
+                'id': this.newWorkspace.id,
+                'theme': this.newWorkspace.theme,
+                'content': this.newWorkspace.content,
+                'date': this.newWorkspace.date
+              });
+              this.workspacesCount += 1;
+              this.createModalStatus(false);
+            }
+          });
+        }
+      });
     },
     deleteItem() {
-      this.workspaces.splice(this.deleteIndex, 1)
-      this.deleteModal = !this.deleteModal
+      this.$api.post('/api/users/deleteWorkspace', {
+        workspace: {
+          id: this.newWorkspace.id,
+          theme: this.workspaces[this.deleteIndex].theme,
+        }
+      }).then((res) => {
+        if (res.data.status) {
+          this.workspaces.splice(this.deleteIndex, 1);
+          this.deleteModal = !this.deleteModal;
+        }
+        else {
+          alert(res.data.msg);
+          this.$router.go();
+        }
+      });
     },
     deleteModalStatus(boolean, index) {
       this.deleteModal = boolean
@@ -126,18 +160,24 @@ export default {
     },
     createModalStatus(boolean) {
       this.createModal = boolean
-      this.newWorkspace.title = ''
-      this.newWorkspace.manual = ''
+      this.newWorkspace.theme = ''
+      this.newWorkspace.content = ''
     },
-    chick() {
-      
-    }
   },
-  created() {
-    this.resizeWindow()
+  mounted() {
+    this.$api.post('/api/users/getWorkspaces', {
+      id: this.newWorkspace.id,
+    }).then((res) => {
+      for (var i = 0; i < res.data.workspaces.length; i++) {
+        this.workspaces.push(res.data.workspaces[i]);
+        this.workspacesCount += 1;
+      }
+    });
+
+    this.resizeWindow();
     window.addEventListener('resize', () => {
-      this.resizeWindow()
-    })
+      this.resizeWindow();
+    });
   }
 }
 </script>
