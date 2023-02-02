@@ -1,3 +1,17 @@
+.containerRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.containerColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper {
+  display: flex;
+}
+
 .box {
   display: flex;
   flex-direction: column;

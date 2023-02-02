@@ -44,6 +44,12 @@ const routes = [
     beforeEnter: checkAuth(true)
   },
   {
+    path: '/workspace/annotation',
+    name: 'annotation',
+    component: () => import('@/views/work/Annotation.vue'),
+    beforeEnter: checkAuth(true)
+  },
+  {
     path: '/inferencepage',
     name: 'inferencepage',
     component: () => import('@/views/inference/InferencePage.vue'),
