@@ -1,9 +1,9 @@
 <template>
   <div class="containerColumn">
-    <div class="wrapper" style="margin-bottom: 20px;">
+    <div class="wrapper">
       <WaatHeader onlyHeader />
     </div>
-    <div class="containerRow justify-center">
+    <div class="containerRow justifyCenter" style="margin: 40px 0px;">
       <canvas
       ref="canvas"
       width="500"

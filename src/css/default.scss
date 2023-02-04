@@ -38,7 +38,15 @@
   justify-content: center;
 }
 
+.justifyCenter {
+  justify-content: center;
+}
+
 .align-center {
+  align-items: center;
+}
+
+.alignCenter {
   align-items: center;
 }
 
@@ -55,7 +63,15 @@
   width: 100%;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 .full-height {
+  height: 100%;
+}
+
+.fullHeight {
   height: 100%;
 }
 
@@ -63,11 +79,23 @@
   max-width: 500px;
 }
 
+.defaultWidth {
+  max-width: 500px;
+}
+
 .left-auto {
   margin-left: auto;
 }
 
+.leftAuto {
+  margin-left: auto;
+}
+
 .right-auto {
+  margin-right: auto;
+}
+
+.rightAuto {
   margin-right: auto;
 }
 

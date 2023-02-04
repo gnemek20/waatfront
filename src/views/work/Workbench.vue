@@ -50,7 +50,7 @@
             <div v-for="index in workspacesCount" v-bind:key="index" style="width: 152px; height: 152px; margin: 10px;">
               <WaatBox class="workspaces" v-if="workspaces[index - 1]">
                 <div class="flex flex-column full-width full-height">
-                  <div class="flex flex-column align-center full-height" style="margin-bottom: auto; padding: 5px;">
+                  <div class="flex flex-column align-center full-height" @click="push('workspace', index - 1)" style="margin-bottom: auto; padding: 5px;">
                     <div class="flex">
                       <p>{{ workspaces[index - 1].theme.length > 10 ? workspaces[index - 1].theme.slice(0, 8) + ' . . .' : workspaces[index - 1].theme }}</p>
                     </div>
@@ -61,7 +61,7 @@
                   </div>
                   <Divider />
                   <div class="flex" style="padding-left: 5px;">
-                    <div class="flex">
+                    <div class="flex" @click="push('workspace', index - 1)">
                       <p class="date">{{ workspaces[index - 1].date }}</p>
                     </div>
                     <div class="trash flex left-auto" @click="deleteModalStatus(true, index - 1)" style="padding: 0px 5px;">
@@ -163,14 +163,16 @@ export default {
       this.newWorkspace.theme = ''
       this.newWorkspace.content = ''
     },
+    push(address, index) {
+      this.$router.push({name: address, query: {theme: this.workspaces[index].theme}});
+    }
   },
-  mounted() {
-    this.$api.post('/api/users/getWorkspaces', {
+  async created() {
+    await this.$api.post('/api/users/getWorkspaces', {
       id: this.newWorkspace.id,
     }).then((res) => {
       for (var i = 0; i < res.data.workspaces.length; i++) {
         this.workspaces.push(res.data.workspaces[i]);
-        this.workspacesCount += 1;
       }
     });
 
