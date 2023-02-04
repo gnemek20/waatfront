@@ -143,6 +143,15 @@ export default {
           this.$refs[index][0]['$el'].style = 'border: 1px solid dimgray; border-radius: 10px; box-shadow: 0px 0px 20px 0px gray;';
         }
       }
+      else {
+        this.$router.push({
+          name: 'annotation',
+          query: {
+            theme: this.workspace.theme,
+            image: this.images[index].image,
+          },
+        });
+      }
     },
     clearStyle() {
       for (let i = 0; i < this.images.length; i++) {
@@ -150,10 +159,8 @@ export default {
       }
     },
     clickOption() {
-      if (this.isSelect) {
-        this.clearStyle();
-        this.clickedImages = [];
-      }
+      if (this.isSelect) this.clearStyle();
+      else this.clickedImages = [];
       
       this.isSelect = !this.isSelect;
     },
