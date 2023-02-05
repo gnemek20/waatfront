@@ -122,6 +122,7 @@ export default {
         }
         this.computeTableRow();
 
+        await this.$api.post('/api/pythons/saveimages', formData)
         await this.$api.post('/api/users/uploadFiles', formData);
         input.value = null;
       }

@@ -3,26 +3,38 @@
     <div class="wrapper">
       <WaatHeader onlyHeader />
     </div>
-    <div class="containerRow justifyCenter" style="margin: 40px 0px;">
-      <canvas
-      ref="canvas"
-      width="500"
-      height="500"
-      />
-      <canvas
-      v-for="index in canvasCount"
-      v-bind:key="index"
-      :ref="index"
-      width="500"
-      height="500"
-      style="position: absolute;"
-      />
-      <canvas
-      ref="dragCanvas"
-      width="500"
-      height="500"
-      style="position: absolute;"
-      />
+    <div class="containerColumn alignCenter" style="margin: 40px 0px;">
+      <div class="containerRow justifyCenter" style="margin-bottom: 20px;">
+        <canvas
+        ref="canvas"
+        width="550"
+        height="550"
+        />
+        <canvas
+        v-for="index in canvasCount"
+        v-bind:key="index"
+        :ref="index"
+        width="550"
+        height="550"
+        style="position: absolute;"
+        />
+        <canvas
+        ref="dragCanvas"
+        width="550"
+        height="550"
+        style="position: absolute;"
+        />
+      </div>
+      <div class="containerColumn options">
+        <div class="containerRow leftAuto">
+          <div class="wrapper" style="margin-right: 10px;">
+            <WaatButton @click="push('workspace')">뒤로가기</WaatButton>
+          </div>
+          <div class="wrapper" style="margin-left: 10px;">
+            <WaatButton>저장하기</WaatButton>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -31,6 +43,11 @@
 export default {
   data() {
     return {
+      image: {
+        id: this.$session.get('id'),
+        theme: this.$route.query.theme,
+        image: this.$route.query.image,
+      },
       rectsCoord: [],
       canvasCount: 0,
       canvas: Object,
@@ -64,8 +81,16 @@ export default {
 
       this.drawRect(this.dragContext, this.clickedX, this.clickedY, movedX, movedY, true);
     },
+    push(address) {
+      this.$router.push({
+        name: address,
+        query: {
+          theme: this.image.theme,
+        },
+      });
+    },
   },
-  mounted() {
+  async mounted() {
     this.canvas = this.$refs['canvas'];
     this.context = this.canvas.getContext('2d');
     this.dragCanvas = this.$refs['dragCanvas']
@@ -74,14 +99,25 @@ export default {
     let saveRectCanvas = new Object();
     let saveRectContext = new Object();
     let isMouseOut = false;
+    let isClickedEsc = false;
 
-    const image = new Image();
-    image.src = 'http://waat.kro.kr:3000/api/pythons/image';
-    image.onload = () => {this.context.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);}
+    await this.$api.post('/api/users/getImage', {
+      image: this.image,
+    }).then((res) => {
+      if (res.data.status) {
+        let showingImage = new Image();
+        fetch('http://waat.kro.kr:3000/api/users/getImage/image');
+        showingImage.src = 'http://waat.kro.kr:3000/api/users/getImage/image';
+        showingImage.onload = async () => {
+          this.context.drawImage(showingImage, 0, 0, this.canvas.width, this.canvas.height);
+        }
+      }
+    });
 
     this.dragCanvas.addEventListener('mousedown', (event) => {
       if (isMouseOut) return;
       isMouseOut = true;
+      isClickedEsc = false;
 
       this.canvasCount = this.canvasCount + 1;
       this.clickedX = event.offsetX;
@@ -92,7 +128,9 @@ export default {
       this.dragCanvas.removeEventListener('mousemove', this.mousePress);
       this.dragContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
       isMouseOut = false;
-      
+
+      if (isClickedEsc) return;
+
       saveRectCanvas = this.$refs[this.canvasCount][0];
       saveRectContext = saveRectCanvas.getContext('2d');
       this.overedX = event.offsetX;
@@ -111,6 +149,10 @@ export default {
         if (this.canvasCount > 0) {
           this.canvasCount = this.canvasCount - 1;
           this.rectsCoord.pop();
+          this.dragCanvas.removeEventListener('mousemove', this.mousePress);
+          this.dragContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          isMouseOut = false;
+          isClickedEsc = true;
         }
       }
     });
@@ -121,5 +163,9 @@ export default {
 <style lang="scss" scoped>
 canvas {
   border: 1px solid dimgray;
+}
+
+.options {
+  width: 550px;
 }
 </style>
